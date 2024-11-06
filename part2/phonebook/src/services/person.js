@@ -13,6 +13,6 @@ export const createContact = newContact => {
 }
 
 export const deleteContactById = id => {
-  const request = axios.delete(url, id)
+  const request = axios.delete(`${url}/${id}`)
   return request.then(response => response.data)
 }

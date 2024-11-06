@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import FormFields from './components/FormFields'
 import ContactDetails from './components/ContactDetails'
-import { createContact, getAllContacts } from './services/person'
+import { createContact, deleteContactById, getAllContacts } from './services/person'
+import FormPerson from './components/FormPerson'
+import Heading from './components/Heading'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -51,35 +52,42 @@ const App = () => {
     setFilteredPersons(filteredPersons)
   }
 
+  const deleteContact = id => {
+    if (window.confirm("Do you want to delete this contact?")) {
+      deleteContactById(id)
+      const filteredPersons = persons.filter(person => person.id !== id)
+      setPersons(filteredPersons)
+    }
+  }
+
   return (
     <>
-      <h2>Phonebook</h2>
+      <Heading text="PhoneBook" />
       <label htmlFor="filteredPerson">filte shown with</label>
       <input type="text" id='filteredPerson' onChange={searchFilteredPersons} />
-      <h2>add a new</h2>
-      <form onSubmit={addContact}>
-        <FormFields
-          contact={contact}
-          setContact={setContact}
-          addNewContact={addNewContact}
-        />
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
+      <Heading text="Add a New" />
+      <FormPerson
+        contact={contact}
+        setContact={setContact}
+        addContact={addContact}
+        addNewContact={addNewContact}
+      />
+      <Heading text="Numbers" />
+
       {
         filteredPersons.length === 0 ? (
           persons.map(person => (
             <ContactDetails
               key={person.name}
               person={person}
+              deleteContact={deleteContact}
             />
           ))) : (
           filteredPersons.map(person => (
             <ContactDetails
               key={person.id}
               person={person}
+              deleteContact={deleteContact}
             />
           ))
         )

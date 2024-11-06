@@ -1,11 +1,9 @@
 import { deleteContactById } from "../services/person"
+import Heading from "./Heading"
 
-const ContactDetails = ({ person }) => {
+const ContactDetails = ({ person, deleteContact }) => {
   const { name, number, id } = person
-
-  const handleDeleteContact = id => {
-    if (window.confirm("Do you delete this contact?")) deleteContactById(id)
-  }
+  // console.log(id);
 
   return (
     <div>
@@ -15,7 +13,7 @@ const ContactDetails = ({ person }) => {
         ) : (
           <>
             <p>Name: {name} Number: {number} {""} 
-              <button type="button" onClick={() => handleDeleteContact(person.id)}>Delete</button>
+              <button type="button" onClick={() => deleteContact(id)}>Delete</button>
             </p>
           </>
         )
