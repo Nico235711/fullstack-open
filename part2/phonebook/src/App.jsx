@@ -3,6 +3,7 @@ import ContactDetails from './components/ContactDetails'
 import { createContact, deleteContactById, getAllContacts } from './services/person'
 import FormPerson from './components/FormPerson'
 import Heading from './components/Heading'
+import MessageAddContact from './components/MessageAddContact'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -12,6 +13,7 @@ const App = () => {
     id: 0
   })
   const [filteredPersons, setFilteredPersons] = useState([])
+  const [message, setMessage] = useState("")
 
   useEffect(() => {
     getAllContacts()
@@ -39,6 +41,10 @@ const App = () => {
         contact
       ])
       createContact(contact)
+      setMessage(`Added ${contact.name}`)
+      setTimeout(() => {
+        setMessage("")
+      }, 2500);
 
       setContact({
         name: "",
@@ -63,7 +69,10 @@ const App = () => {
   return (
     <>
       <Heading text="PhoneBook" />
-      <label htmlFor="filteredPerson">filte shown with</label>
+      {
+        message && <MessageAddContact text={message} />
+      }
+      <label htmlFor="filteredPerson">filter shown with</label>
       <input type="text" id='filteredPerson' onChange={searchFilteredPersons} />
       <Heading text="Add a New" />
       <FormPerson
