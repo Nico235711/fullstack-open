@@ -1,17 +1,22 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import FormFields from './components/FormFields'
 import ContactDetails from './components/ContactDetails'
+import axios from 'axios'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: "123456789", id: 1 }
-  ])
+  const [persons, setPersons] = useState([])
   const [contact, setContact] = useState({
     name: "",
     number: "",
     id: 0
   })
   const [filteredPersons, setFilteredPersons] = useState([])
+
+  useEffect(() => {
+    const url = "http://localhost:3001/persons"
+    const promise = axios.get(url)
+    promise.then(response => setPersons(response.data))
+  }, []);
 
   const addNewContact = (event) => {
     // console.log(event.target);
