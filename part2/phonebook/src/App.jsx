@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import FormFields from './components/FormFields'
 import ContactDetails from './components/ContactDetails'
-import axios from 'axios'
+import { createContact, getAllContacts } from './services/person'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -13,9 +13,9 @@ const App = () => {
   const [filteredPersons, setFilteredPersons] = useState([])
 
   useEffect(() => {
-    const url = "http://localhost:3001/persons"
-    const promise = axios.get(url)
-    promise.then(response => setPersons(response.data))
+    getAllContacts()
+      .then(response => setPersons(response))
+      .catch("No contacts")
   }, []);
 
   const addNewContact = (event) => {
@@ -24,7 +24,7 @@ const App = () => {
     setContact({
       ...contact,
       [event.target.name]: event.target.value,
-      id: persons.length + 1
+      id: `${persons.length + 1}`
     })
   }
 
@@ -37,6 +37,8 @@ const App = () => {
         ...persons,
         contact
       ])
+      createContact(contact)
+
       setContact({
         name: "",
         number: ""
