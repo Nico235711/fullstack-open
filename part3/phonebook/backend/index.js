@@ -2,6 +2,8 @@ import express from "express";
 
 const app = express();
 
+const NOT_FOUND = 404
+
 let contacts = [
   {
     id: 1,
@@ -25,8 +27,38 @@ let contacts = [
   },
 ];
 
-app.get("/api/contacts", (req, res) => {
+app.post("/api/persons", (req, res) => {
   res.json(contacts)
+})
+
+app.get("/api/persons", (req, res) => {
+  res.json(contacts)
+})
+
+app.get("/api/persons/:id", (req, res) => {
+  const { id } = req.params
+  const idToNumber = Number(id)
+  
+  const person = contacts.find(contact => contact.id === idToNumber)
+  // console.log(person);
+  if (!person) {
+    res.status(NOT_FOUND).json({ error: "Contact not found" })
+  }
+  
+  res.json(person)
+})
+
+app.delete("/api/persons/:id", (req, res) => {
+  const { id } = req.params
+  const idToNumber = Number(id)
+  
+  const person = contacts.filter(contact => contact.id !== idToNumber)
+  // console.log(person);
+  if (!person) {
+    res.status(NOT_FOUND).json({ error: "Contact not found" })
+  }
+  
+  res.json(person)
 })
 
 app.get("/info", (req, res) => {
