@@ -28,6 +28,24 @@ let contacts = [
 ];
 
 app.post("/api/persons", (req, res) => {
+  const { name, number } = req.body;
+
+  // Validaciones
+  if (!name || !number) {
+    return res.status(400).json({ error: "Name and number are required" });
+  }
+  if (contacts.some(contact => contact.name === name)) {
+    return res.status(400).json({ error: "Name must be unique" });
+  }
+
+  const newContact = {
+    id: Math.floor(Math.random() * 10000), // Generar ID único
+    name,
+    number
+  };
+
+  contacts.push(newContact);
+  res.status(201).json(newContact);
   res.json(contacts)
 })
 
