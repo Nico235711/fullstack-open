@@ -4,6 +4,10 @@ import morgan from "morgan";
 export const server = express();
 
 const CODE_NOT_FOUND = 404
+const CODE_BAD_REQUEST = 400
+const CODE_CREATED = 201
+const CODE_OK = 200
+const CODE_NO_CONTENT = 204
 
 const contacts = [
   {
@@ -39,10 +43,10 @@ server.post("/api/persons", (req, res) => {
 
   // Validaciones
   if (!name || !number) {
-    return res.status(400).json({ error: "Name or number are required" });
+    return res.status(BAD_REQUEST).json({ error: "Name or number are required" });
   }
   if (contacts.some(contact => contact.name === name)) {
-    return res.status(400).json({ error: "Name must be unique" });
+    return res.status(BAD_REQUEST).json({ error: "Name must be unique" });
   }
 
   const newContact = {
@@ -52,12 +56,12 @@ server.post("/api/persons", (req, res) => {
   };
 
   contacts.push(newContact);
-  res.status(201).json(newContact);
+  res.status(CREATED).json(newContact);
   res.json(contacts)
 })
 
 server.get("/api/persons", (req, res) => {
-  res.json(contacts)
+  res.status(CODE_OK).json(contacts)
 })
 
 server.get("/api/persons/:id", (req, res) => {
@@ -71,7 +75,12 @@ server.get("/api/persons/:id", (req, res) => {
     res.status(CODE_NOT_FOUND).json({ error: "Contact not found" })
   }
 
-  res.json(person)
+  res.status(CODE_OK).json(person)
+})
+
+server.get("/info", (req, res) => {
+  const contactsLength = contacts.length
+  res.status(CODE_OK).send(`<p>Phonebook has ${contactsLength} people</p><p>${new Date()}</p>`)
 })
 
 server.delete("/api/persons/:id", (req, res) => {
@@ -84,10 +93,5 @@ server.delete("/api/persons/:id", (req, res) => {
     res.status(CODE_NOT_FOUND).json({ error: "Contact not found" })
   }
 
-  res.json(person)
-})
-
-server.get("/info", (req, res) => {
-  const contactsLength = contacts.length
-  res.send(`<p>Phonebook has ${contactsLength} people</p><p>${new Date()}</p>`)
+  res.status(CODE_NO_CONTENT).json(person)
 })
