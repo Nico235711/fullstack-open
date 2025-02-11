@@ -3,11 +3,12 @@ import morgan from "morgan";
 
 export const server = express();
 
-const CODE_NOT_FOUND = 404
-const CODE_BAD_REQUEST = 400
-const CODE_CREATED = 201
-const CODE_OK = 200
-const CODE_NO_CONTENT = 204
+const STATE_CODE = Object.freeze({
+  not_found: 404,
+  bad_request: 400,
+  created: 201,
+  no_content: 204
+})
 
 const contacts = [
   {
@@ -36,17 +37,17 @@ const contacts = [
 server.use(express.json())
 
 // uso morgan para ver las solicitudes HTTP
-server.use(morgan("tiny"))
+server.use(morgan("dev"))
 
 server.post("/api/persons", (req, res) => {
   const { name, number } = req.body;
 
   // Validaciones
   if (!name || !number) {
-    return res.status(BAD_REQUEST).json({ error: "Name or number are required" });
+    return res.status(STATE_CODE.bad_request).json({ error: "Name or number are required" });
   }
   if (contacts.some(contact => contact.name === name)) {
-    return res.status(BAD_REQUEST).json({ error: "Name must be unique" });
+    return res.status(STATE_CODE.bad_request).json({ error: "Name must be unique" });
   }
 
   const newContact = {
@@ -56,12 +57,12 @@ server.post("/api/persons", (req, res) => {
   };
 
   contacts.push(newContact);
-  res.status(CREATED).json(newContact);
+  res.status(STATE_CODE.created).json(newContact);
   res.json(contacts)
 })
 
 server.get("/api/persons", (req, res) => {
-  res.status(CODE_OK).json(contacts)
+  res.json(contacts)
 })
 
 server.get("/api/persons/:id", (req, res) => {
@@ -72,15 +73,10 @@ server.get("/api/persons/:id", (req, res) => {
   const person = contacts.find(contact => contact.id === idToNumber)
   // console.log(person);
   if (!person) {
-    res.status(CODE_NOT_FOUND).json({ error: "Contact not found" })
+    res.status(STATE_CODE.not_found).json({ error: "Contact not found" })
   }
 
-  res.status(CODE_OK).json(person)
-})
-
-server.get("/info", (req, res) => {
-  const contactsLength = contacts.length
-  res.status(CODE_OK).send(`<p>Phonebook has ${contactsLength} people</p><p>${new Date()}</p>`)
+  res.json(person)
 })
 
 server.delete("/api/persons/:id", (req, res) => {
@@ -90,8 +86,13 @@ server.delete("/api/persons/:id", (req, res) => {
   const person = contacts.filter(contact => contact.id !== idToNumber)
   // console.log(person);
   if (!person) {
-    res.status(CODE_NOT_FOUND).json({ error: "Contact not found" })
+    res.status(STATE_CODE.not_found).json({ error: "Contact not found" })
   }
 
-  res.status(CODE_NO_CONTENT).json(person)
+  res.status(STATE_CODE.no_content).json("Person deleted")
+})
+
+server.get("/info", (req, res) => {
+  const contactsLength = contacts.length
+  res.status(CODE_OK).send(`<p>Phonebook has ${contactsLength} people</p><p>${new Date()}</p>`)
 })
