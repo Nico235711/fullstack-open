@@ -1,5 +1,7 @@
 import express from "express";
 import morgan from "morgan";
+import cors from 'cors';
+import { corsConfig } from "./config/cors.js";
 
 export const server = express();
 
@@ -38,6 +40,9 @@ server.use(express.json())
 
 // uso morgan para ver las solicitudes HTTP
 server.use(morgan("dev"))
+
+// habilito los CORS
+server.use(cors(corsConfig))
 
 server.post("/api/persons", (req, res) => {
   const { name, number } = req.body;
