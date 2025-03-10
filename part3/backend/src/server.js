@@ -42,7 +42,7 @@ server.use(express.json())
 server.use(morgan("dev"))
 
 // habilito los CORS
-server.use(cors(corsConfig))
+// server.use(cors(corsConfig))
 
 server.post("/api/persons", (req, res) => {
   const { name, number } = req.body;
