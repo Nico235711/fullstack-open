@@ -66,6 +66,10 @@ server.post("/api/persons", (req, res) => {
   res.json(contacts)
 })
 
+server.get("/", (req, res) => {
+  res.send("<h1>Hello World</h1>")
+})
+
 server.get("/api/persons", (req, res) => {
   res.json(contacts)
 })
