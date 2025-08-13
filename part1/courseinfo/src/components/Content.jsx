@@ -4,8 +4,8 @@ const Content = ({ parts }) => {
 
   return (
     <div>
-      {parts.map((part, index) => (
-        <Part key={index} part={part} />
+      {parts.map((part) => (
+        <Part key={part.id} part={part} />
       ))}
     </div>
   )
