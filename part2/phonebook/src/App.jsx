@@ -1,35 +1,35 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { PersonForm } from './components/PersonForm'
+import { Filter } from './components/Filter'
+import { Persons } from './components/Persons'
 
-function App() {
-  const [count, setCount] = useState(0)
+const INITIAL_PERSONS = [
+  { id: 1, name: "Arto Hellas", number: "040-123456" },
+  { id: 2, name: "Ada Lovelace", number: "39-44-5323523" },
+  { id: 3, name: "Dan Abramov", number: "12-43-234345" },
+  { id: 4, name: "Mary Poppendieck", number: "39-23-6423122" }
+]
+
+export const App = () => {
+  const [persons, setPersons] = useState(INITIAL_PERSONS)
+  const [search, setSearch] = useState("")
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <h2>Phonebook</h2>
+      <Filter
+        search={search}
+        setSearch={setSearch} 
+      />
+      <PersonForm
+        persons={persons}
+        setPersons={setPersons} 
+      />
+      <h2>Numbers</h2>
+      <Persons
+        search={search}
+        persons={persons} 
+      />
+    </div>
   )
 }
-
-export default App
